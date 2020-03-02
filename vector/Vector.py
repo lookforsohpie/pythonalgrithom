@@ -22,7 +22,7 @@ class Vector:
         if self._capacity > self._size:
             return
         else:
-            self._capacity = self._capacity << 2
+            self._capacity = self._capacity << 1
             oldlist = self._elem
             self._elem = [0] * self._capacity
             for i in range(len(oldlist)):
@@ -30,8 +30,8 @@ class Vector:
 
     #    void shrink(); //装填因子过小时压缩
     def _shrink(self):
-        if self._size < self._capacity >> 2:
-            self._capacity = self._capacity >> 2
+        if self._size < self._capacity >> 1:
+            self._capacity = self._size << 1
             oldlist = self._elem
             self._elem = [0] * self._capacity
             for i in range(self._size):
@@ -39,6 +39,14 @@ class Vector:
 
     #    bool bubble ( Rank lo, Rank hi ); //扫描交换
     #    void bubbleSort ( Rank lo, Rank hi ); //起泡排序算法
+    def _bubblesort(self,lo,hi):
+        for i in range(lo,hi):
+            for j in range(lo,hi):
+                if self._elem[j-1]>self._elem[j]:
+                    term = self._elem[j-1]
+                    self._elem[j-1] = self._elem[j]
+                    self._elem[j] = term
+            hi-=1
     #    Rank max ( Rank lo, Rank hi ); //选取最大元素
     #    void selectionSort ( Rank lo, Rank hi ); //选择排序算法
     #    void merge ( Rank lo, Rank mi, Rank hi ); //归并算法
@@ -69,7 +77,7 @@ class Vector:
                 lo = args[0]
                 hi = args[1]
             self._size = (hi - lo)
-            self._capacity = self._size << 2
+            self._capacity = self._size << 1
             self._elem = [0] * self._capacity
             self._copyFrom(A, lo, hi)
 
@@ -100,7 +108,7 @@ class Vector:
                 raise Exception("the len of args must be 2")
             lo = args[0]
             hi = args[1]
-        for i in range(lo, hi + 1):
+        for i in range(lo, hi):
             if self._elem[i] == elem:
                 rank = i
         return rank
@@ -154,10 +162,37 @@ class Vector:
 
     #    void sort ( Rank lo, Rank hi ); //对[lo, hi)排序
     #    void sort() { sort ( 0, _size ); } //整体排序
+    def sort(self,*args):
+        lo =0
+        hi = self._size
+        if len(args):
+            lo = args[0]
+            hi = args[1]
+        self._bubblesort(lo,hi)
     #    void unsort ( Rank lo, Rank hi ); //对[lo, hi)置乱
     #    void unsort() { unsort ( 0, _size ); } //整体置乱
     #    int deduplicate(); //无序去重
+    def deduplicate(self):
+        i=1
+        while i<self._size:
+            if self.find(self._elem[i],0,i)!=-1:
+                self.remove(i)
+            i+=1
     #    int uniquify(); //有序去重
+    def uniquify(self):
+        i=0
+        j=1
+        for j in range(1,self._size):
+            if self._elem[i]!=self._elem[j]:
+                i+=1
+                self._elem[i]=self._elem[j]
+        self._size = i+1
+        self._shrink()
+
     # // 遍历
     #    void traverse ( void (* ) ( T& ) ); //遍历（使用函数指针，只读或局部性修改）
     #    template <typename VST> void traverse ( VST& ); //遍历（使用函数对象，可全局性修改）
+    def traverse(self, func):
+        for i in range(self._size):
+            self._elem[i]=func(self._elem[i])
+
