@@ -1,9 +1,10 @@
 from vector.Vector import Vector
 
-A = [8, 3, 2, 9, 12, 4, 7,3,9,8,8]
+A = [8, 3, 2, 9, 12, 4, 7,3,9,8,8,1]
 v = Vector(capacity=None, size=5, v=1, A=A)
 v.sort()
 print(v.getlist())
+print(v.search(14))
 v.uniquify()
 print(v.getlist())
 print(v.size())

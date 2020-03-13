@@ -116,6 +116,22 @@ class Vector:
     #    Rank search ( T const& e ) const //有序向量整体查找
     #    { return ( 0 >= _size ) ? -1 : search ( e, 0, _size ); }
     #    Rank search ( T const& e, Rank lo, Rank hi ) const; //有序向量区间查找
+    def search(self,e,*args):
+        lo = 0
+        hi = self._size
+        if len(args):
+            lo = args[0]
+            hi = args[1]
+        while lo<hi:
+            mi = (lo + hi)>>1
+            if e<self._elem[mi]:
+                hi=mi
+            else:
+                if self._elem[mi]<e:
+                    lo = mi+1
+                else:
+                    return mi
+        return -1
     # // 可写访问接口
     #    T& operator[] ( Rank r ); //重载下标操作符，可以类似于数组形式引用各元素
     #    const T& operator[] ( Rank r ) const; //仅限于做右值的重载版本
